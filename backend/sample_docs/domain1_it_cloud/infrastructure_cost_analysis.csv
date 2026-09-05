@@ -1,0 +1,7 @@
+Provider,Service_Category,Region,Monthly_Cost_USD,SLA_Uptime_Pct
+AWS,Compute EC2,us-east-1,4500.0,99.99
+AWS,Storage S3,us-east-1,1200.0,99.999999999
+GCP,Compute GKE,us-central1,4200.0,99.95
+GCP,Storage Cloud Storage,us-central1,1100.0,99.999999999
+Azure,Compute AKS,eastus,4700.0,99.95
+Azure,Storage Blob,eastus,1250.0,99.999999999

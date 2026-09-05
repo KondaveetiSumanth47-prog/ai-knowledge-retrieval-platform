@@ -1,0 +1,13 @@
+RESTful API Security Specification & Authentication Policy
+
+1. OAuth2 Authentication Framework:
+All client applications must authenticate using OAuth2.0 Client Credentials or Authorization Code flow with PKCE. Tokens are issued by the Central Identity Provider (IdP) and signed using RS256 algorithm.
+
+2. Access Token Lifecycle:
+Access Tokens expire exactly 60 minutes after issuance. Refresh Tokens remain valid for 14 days, provided they are rotated on each token renewal request. Token revocation endpoints must respond within 100ms.
+
+3. API Rate Limiting Policy:
+Standard public endpoints are rate-limited to 100 requests per minute per IP address. Authenticated tier APIs allow up to 5,000 requests per hour. Excess requests trigger HTTP 429 Too Many Requests response with Retry-After header.
+
+4. Data Encryption Standards:
+All data in transit must enforce TLS 1.3 or TLS 1.2 minimum. Data at rest in S3 buckets and RDS volumes must be encrypted using AWS KMS managed keys with AES-256 encryption.

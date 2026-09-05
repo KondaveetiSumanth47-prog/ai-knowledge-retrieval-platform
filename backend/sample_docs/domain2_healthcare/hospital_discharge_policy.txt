@@ -1,0 +1,13 @@
+Hospital Inpatient Discharge & Post-Acute Care Policy
+
+1. Discharge Readiness Criteria:
+Inpatients are eligible for discharge when vital signs remain stable for 24 consecutive hours, oral intake is tolerated, surgical incisions show no signs of infection, and pain is adequately controlled with oral analgesics.
+
+2. Medication Reconciliation Procedure:
+The attending physician and clinical pharmacist must perform a full medication reconciliation comparing pre-admission medications with discharge prescriptions. Discontinued medications must be explicitly highlighted to prevent accidental duplication.
+
+3. Follow-Up Appointment Scheduling:
+High-risk patients (heart failure, COPD, diabetes) must have a post-discharge clinic follow-up scheduled within 7 business days of discharge. A discharge summary must be transmitted to the primary care provider within 48 hours.
+
+4. Patient Discharge Education:
+Nurses must deliver verbal and written discharge instructions covering wound care, warning signs requiring ER return, activity restrictions, and emergency contact numbers.

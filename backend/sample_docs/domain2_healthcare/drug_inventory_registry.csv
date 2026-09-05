@@ -1,0 +1,7 @@
+Drug_Name,Category,Storage_Condition,Stock_Units,Expiry_Date
+Amoxicillin 500mg,Antibiotic,Room Temp (<25C),1200,2027-08-15
+Lisinopril 10mg,Antihypertensive,Room Temp (<25C),3400,2028-02-20
+Metformin 850mg,Antidiabetic,Room Temp (<25C),2100,2027-11-30
+Atorvastatin 20mg,Statin,Room Temp (<25C),1800,2028-05-10
+Albuterol Inhaler,Bronchodilator,Protect from heat,450,2026-12-01
+Insulin Glargine 100U,Insulin,Refrigerated (2-8C),280,2026-10-15
