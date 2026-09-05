@@ -169,9 +169,22 @@ export default function DocumentBrowser({ API_BASE }) {
                       <button
                         onClick={() => handleInspectChunks(doc)}
                         title="View Chunks"
-                        style={{ padding: '0.4rem', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#0f172a', color: '#06b6d4', cursor: 'pointer' }}
+                        style={{
+                          padding: '0.4rem 0.75rem',
+                          borderRadius: '6px',
+                          border: '1px solid rgba(6, 182, 212, 0.4)',
+                          backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                          color: '#22d3ee',
+                          fontWeight: 600,
+                          fontSize: '0.75rem',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.35rem'
+                        }}
                       >
                         <Eye size={14} />
+                        View Chunks
                       </button>
                       <button
                         onClick={() => handleDelete(doc.id)}
