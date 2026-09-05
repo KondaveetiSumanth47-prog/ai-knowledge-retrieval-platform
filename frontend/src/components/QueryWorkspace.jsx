@@ -177,7 +177,7 @@ export default function QueryWorkspace({ API_BASE }) {
             {messages.length === 0 ? (
               <div style={{ textAlign: 'center', margin: 'auto', color: '#64748b', maxWidth: '440px' }}>
                 <Sparkles size={40} color="#6366f1" style={{ opacity: 0.5, marginBottom: '1rem' }} />
-                <h3 style={{ fontSize: '1.1rem', color: '#e2e8f0', fontWeight: 600 }}>Multi-Agent Query Resolution System (M2)</h3>
+                <h3 style={{ fontSize: '1.1rem', color: '#e2e8f0', fontWeight: 600 }}>Web Speech & Multi-Agent Interface</h3>
                 <p style={{ fontSize: '0.85rem', marginTop: '0.5rem', lineHeight: '1.4' }}>
                   Ask questions in plain text or voice. The system classifies your query (Factual, Procedural, Comparative, Ambiguous), routes to a resolution path, and returns cited answers.
                 </p>

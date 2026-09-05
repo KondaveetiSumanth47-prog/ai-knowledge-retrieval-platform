@@ -62,7 +62,7 @@ export default function AgentArchitectureView({ API_BASE }) {
       {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', backgroundColor: 'rgba(99, 102, 241, 0.15)', border: '1px solid rgba(99, 102, 241, 0.3)', padding: '0.35rem 0.85rem', borderRadius: '20px', color: '#818cf8', fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.75rem' }}>
-          <Layers size={14} /> Multi-Agent Orchestration Architecture (Milestone 2)
+          <Layers size={14} /> Multi-Agent Orchestration Architecture
         </div>
         <h2 style={{ fontSize: '1.75rem', fontWeight: 700, background: 'linear-gradient(to right, #ffffff, #cbd5e1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
           AI Agent Layer & Sequential Resolution Flow
@@ -135,7 +135,7 @@ export default function AgentArchitectureView({ API_BASE }) {
         
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
           <h3 style={{ fontSize: '1rem', fontWeight: 600, color: '#f8fafc', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Cpu size={18} color="#6366f1" /> Query Classification Taxonomy (M2.1)
+            <Cpu size={18} color="#6366f1" /> Query Classification Taxonomy
           </h3>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.8rem' }}>
@@ -175,7 +175,7 @@ export default function AgentArchitectureView({ API_BASE }) {
 
         <div className="glass-panel" style={{ padding: '1.5rem' }}>
           <h3 style={{ fontSize: '1rem', fontWeight: 600, color: '#f8fafc', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Search size={18} color="#06b6d4" /> Retrieval & Response Synthesis (M2.2 - M2.4)
+            <Search size={18} color="#06b6d4" /> Retrieval & Response Synthesis
           </h3>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '0.8rem', color: '#cbd5e1' }}>

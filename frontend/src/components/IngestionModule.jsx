@@ -87,7 +87,7 @@ export default function IngestionModule({ API_BASE, onIngestionSuccess }) {
               <h2 style={{ fontSize: '1.25rem', fontWeight: 600 }}>Document Ingestion Module</h2>
             </div>
             <span style={{ fontSize: '0.75rem', padding: '0.25rem 0.6rem', borderRadius: '12px', background: 'rgba(99, 102, 241, 0.2)', color: '#818cf8', border: '1px solid rgba(99, 102, 241, 0.3)' }}>
-              Milestone 1.3
+              Ingestion Engine
             </span>
           </div>
 

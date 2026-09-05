@@ -3,11 +3,11 @@ import { Database, Bot, FileText, BarChart3, Cpu, Sparkles } from 'lucide-react'
 
 export default function Navbar({ activeTab, setActiveTab }) {
   const tabs = [
-    { id: 'ingest', label: 'Document Ingestion (M1.3)', icon: Database },
+    { id: 'ingest', label: 'Document Ingestion', icon: Database },
     { id: 'query', label: 'Multi-Agent Query UI (Voice/Text)', icon: Bot },
-    { id: 'agents', label: 'Agent Architecture (M2)', icon: Cpu },
+    { id: 'agents', label: 'Agent Architecture', icon: Cpu },
     { id: 'documents', label: 'Knowledge Base Browser', icon: FileText },
-    { id: 'eval', label: 'Retrieval Benchmark (M1.4)', icon: BarChart3 },
+    { id: 'eval', label: 'Retrieval Benchmark', icon: BarChart3 },
   ];
 
   return (
@@ -37,7 +37,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
               RAG Knowledge Retrieval Platform
             </h1>
             <p style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '-2px' }}>
-              Multi-Agent Query Resolution Pipeline (Milestone 2)
+              Multi-Agent Query Resolution Pipeline
             </p>
           </div>
         </div>
