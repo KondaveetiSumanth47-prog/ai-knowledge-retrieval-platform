@@ -175,6 +175,20 @@ def seed_sample_docs():
         "details": results
     }), 200
 
+@app.route('/api/agents/status', methods=['GET'])
+def get_agents_status():
+    """Returns active sub-agents status and telemetry."""
+    return jsonify({
+        "agents": [
+            {"id": "query_understanding", "name": "1. Query Understanding Agent", "status": "active", "role": "Classifies intent (Factual, Procedural, Comparative, Ambiguous) & routes resolution path"},
+            {"id": "retrieval", "name": "2. Retrieval Agent", "status": "active", "role": "Semantic ChromaDB search, hybrid relevance ranking & low-confidence filtering"},
+            {"id": "clarification", "name": "3. Clarification Agent", "status": "active", "role": "Evaluates confidence thresholds & prompts follow-up questions"},
+            {"id": "memory", "name": "4. Conversation Memory Agent", "status": "active", "role": "Stores & retrieves multi-turn dialogue history state"},
+            {"id": "response_generator", "name": "5. Response Generation Agent", "status": "active", "role": "Synthesizes grounded answers with citations & confidence indicators"}
+        ],
+        "orchestrator_status": "operational"
+    }), 200
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     print(f"Starting RAG Multi-Agent Flask Server on port {port}...")

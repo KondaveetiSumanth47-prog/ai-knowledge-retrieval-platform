@@ -1,10 +1,11 @@
 import React from 'react';
-import { Database, Bot, FileText, BarChart3, Sparkles } from 'lucide-react';
+import { Database, Bot, FileText, BarChart3, Cpu, Sparkles } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab }) {
   const tabs = [
     { id: 'ingest', label: 'Document Ingestion (M1.3)', icon: Database },
     { id: 'query', label: 'Multi-Agent Query UI (Voice/Text)', icon: Bot },
+    { id: 'agents', label: 'Agent Architecture (M2)', icon: Cpu },
     { id: 'documents', label: 'Knowledge Base Browser', icon: FileText },
     { id: 'eval', label: 'Retrieval Benchmark (M1.4)', icon: BarChart3 },
   ];
@@ -36,12 +37,12 @@ export default function Navbar({ activeTab, setActiveTab }) {
               RAG Knowledge Retrieval Platform
             </h1>
             <p style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '-2px' }}>
-              Multi-Agent Query System & Chunking Engine (Milestone 1)
+              Multi-Agent Query Resolution Pipeline (Milestone 2)
             </p>
           </div>
         </div>
 
-        <nav style={{ display: 'flex', gap: '0.5rem' }}>
+        <nav style={{ display: 'flex', gap: '0.35rem' }}>
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -52,11 +53,11 @@ export default function Navbar({ activeTab, setActiveTab }) {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.6rem 1rem',
+                  gap: '0.45rem',
+                  padding: '0.55rem 0.85rem',
                   borderRadius: '8px',
                   border: 'none',
-                  fontSize: '0.875rem',
+                  fontSize: '0.825rem',
                   fontWeight: 500,
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
@@ -65,7 +66,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
                   outline: isActive ? '1px solid rgba(99, 102, 241, 0.4)' : 'none'
                 }}
               >
-                <Icon size={18} color={isActive ? '#818cf8' : '#94a3b8'} />
+                <Icon size={16} color={isActive ? '#818cf8' : '#94a3b8'} />
                 {tab.label}
               </button>
             );

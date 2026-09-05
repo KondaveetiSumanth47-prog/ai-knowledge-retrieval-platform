@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Mic, MicOff, Volume2, VolumeX, Send, Bot, User, Sparkles, AlertCircle, FileText, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { Mic, MicOff, Volume2, VolumeX, Send, Bot, User, Sparkles, AlertCircle, FileText, ChevronRight, CheckCircle2, Cpu, Filter, Clock } from 'lucide-react';
 
 export default function QueryWorkspace({ API_BASE }) {
   const [query, setQuery] = useState('');
@@ -104,9 +104,14 @@ export default function QueryWorkspace({ API_BASE }) {
       const botMsg = {
         sender: 'bot',
         content: data.answer,
+        intent: data.intent,
+        resolution_path: data.resolution_path,
         confidence: data.confidence_score,
+        confidence_level: data.confidence_level,
         citations: data.citations,
         agent_trace: data.agent_trace,
+        filtered_out_count: data.filtered_out_count,
+        total_latency_ms: data.total_latency_ms,
         needs_clarification: data.needs_clarification,
         clarification_options: data.clarification_options
       };
@@ -125,7 +130,7 @@ export default function QueryWorkspace({ API_BASE }) {
 
   return (
     <div style={{ padding: '2rem 0', maxWidth: '1400px', margin: '0 auto' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 420px', gap: '1.5rem', height: 'calc(100vh - 140px)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 440px', gap: '1.5rem', height: 'calc(100vh - 140px)' }}>
         
         {/* Main Conversation Panel */}
         <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
@@ -141,11 +146,10 @@ export default function QueryWorkspace({ API_BASE }) {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <Bot size={20} color="#6366f1" />
-              <span style={{ fontWeight: 600, fontSize: '0.95rem' }}>Multi-Agent RAG Query Workspace</span>
+              <span style={{ fontWeight: 600, fontSize: '0.95rem' }}>Multi-Agent Resolution Workspace</span>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              {/* Domain Filter */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: '#94a3b8' }}>
                 <span>Domain Filter:</span>
                 <select
@@ -171,24 +175,30 @@ export default function QueryWorkspace({ API_BASE }) {
           {/* Messages Stream */}
           <div style={{ flex: 1, padding: '1.5rem', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             {messages.length === 0 ? (
-              <div style={{ textAlign: 'center', margin: 'auto', color: '#64748b', maxWidth: '400px' }}>
+              <div style={{ textAlign: 'center', margin: 'auto', color: '#64748b', maxWidth: '440px' }}>
                 <Sparkles size={40} color="#6366f1" style={{ opacity: 0.5, marginBottom: '1rem' }} />
-                <h3 style={{ fontSize: '1.1rem', color: '#e2e8f0', fontWeight: 600 }}>Web Speech & Multi-Agent Interface</h3>
+                <h3 style={{ fontSize: '1.1rem', color: '#e2e8f0', fontWeight: 600 }}>Multi-Agent Query Resolution System (M2)</h3>
                 <p style={{ fontSize: '0.85rem', marginTop: '0.5rem', lineHeight: '1.4' }}>
-                  Ask questions via voice or text. The 5 specialized AI agents will analyze intent, perform vector retrieval in ChromaDB, and synthesize cited answers.
+                  Ask questions in plain text or voice. The system classifies your query (Factual, Procedural, Comparative, Ambiguous), routes to a resolution path, and returns cited answers.
                 </p>
-                <div style={{ marginTop: '1rem', display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center' }}>
+                <div style={{ marginTop: '1rem', display: 'flex', flexWrap: 'wrap', gap: '0.4rem', justifyContent: 'center' }}>
                   <button
                     onClick={() => setQuery("What is the token expiration time in OAuth2 authentication?")}
-                    style={{ fontSize: '0.75rem', padding: '0.35rem 0.6rem', borderRadius: '6px', backgroundColor: 'rgba(99, 102, 241, 0.1)', border: '1px solid rgba(99, 102, 241, 0.2)', color: '#818cf8', cursor: 'pointer' }}
+                    style={{ fontSize: '0.75rem', padding: '0.35rem 0.55rem', borderRadius: '6px', backgroundColor: 'rgba(99, 102, 241, 0.1)', border: '1px solid rgba(99, 102, 241, 0.2)', color: '#818cf8', cursor: 'pointer' }}
                   >
-                    IT: OAuth2 Expiration
+                    Factual: OAuth2 Expiration
                   </button>
                   <button
-                    onClick={() => setQuery("What storage temperature condition is required for Insulin Glargine?")}
-                    style={{ fontSize: '0.75rem', padding: '0.35rem 0.6rem', borderRadius: '6px', backgroundColor: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.2)', color: '#22d3ee', cursor: 'pointer' }}
+                    onClick={() => setQuery("What are the automated rollback triggers during production deployment?")}
+                    style={{ fontSize: '0.75rem', padding: '0.35rem 0.55rem', borderRadius: '6px', backgroundColor: 'rgba(6, 182, 212, 0.1)', border: '1px solid rgba(6, 182, 212, 0.2)', color: '#22d3ee', cursor: 'pointer' }}
                   >
-                    Healthcare: Insulin Storage
+                    Procedural: Rollback Steps
+                  </button>
+                  <button
+                    onClick={() => setQuery("Compare AWS EC2 compute cost versus GCP GKE compute cost.")}
+                    style={{ fontSize: '0.75rem', padding: '0.35rem 0.55rem', borderRadius: '6px', backgroundColor: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.2)', color: '#fbbf24', cursor: 'pointer' }}
+                  >
+                    Comparative: AWS vs GCP
                   </button>
                 </div>
               </div>
@@ -219,7 +229,7 @@ export default function QueryWorkspace({ API_BASE }) {
                   )}
 
                   <div style={{
-                    maxWidth: '80%',
+                    maxWidth: '82%',
                     padding: '1rem',
                     borderRadius: '12px',
                     backgroundColor: msg.sender === 'user' ? '#4f46e5' : 'rgba(30, 41, 59, 0.9)',
@@ -229,37 +239,70 @@ export default function QueryWorkspace({ API_BASE }) {
                     lineHeight: '1.5'
                   }}>
                     {msg.sender === 'bot' && (
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem', paddingBottom: '0.4rem', borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                          <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#818cf8' }}>Response Agent</span>
-                          {msg.confidence && (
+                      <div style={{ marginBottom: '0.65rem', paddingBottom: '0.5rem', borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+                            {/* Intent Badge */}
                             <span style={{
                               fontSize: '0.7rem',
-                              padding: '0.1rem 0.4rem',
-                              borderRadius: '10px',
-                              backgroundColor: msg.confidence >= 0.7 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)',
-                              color: msg.confidence >= 0.7 ? '#34d399' : '#fbbf24',
+                              fontWeight: 700,
+                              padding: '0.15rem 0.5rem',
+                              borderRadius: '4px',
+                              backgroundColor: msg.intent === 'Factual' ? 'rgba(99, 102, 241, 0.2)' :
+                                               msg.intent === 'Procedural' ? 'rgba(6, 182, 212, 0.2)' :
+                                               msg.intent === 'Comparative' ? 'rgba(245, 158, 11, 0.2)' : 'rgba(244, 63, 94, 0.2)',
+                              color: msg.intent === 'Factual' ? '#818cf8' :
+                                     msg.intent === 'Procedural' ? '#22d3ee' :
+                                     msg.intent === 'Comparative' ? '#fbbf24' : '#f43f5e',
                               border: '1px solid rgba(255, 255, 255, 0.1)'
                             }}>
-                              Confidence: {(msg.confidence * 100).toFixed(0)}%
+                              {msg.intent} Query
                             </span>
-                          )}
+
+                            {/* Resolution Path Badge */}
+                            <span style={{ fontSize: '0.68rem', color: '#64748b', fontFamily: 'var(--font-mono)' }}>
+                              [{msg.resolution_path}]
+                            </span>
+                          </div>
+
+                          {/* TTS Speaker */}
+                          <button
+                            onClick={() => speakText(msg.content)}
+                            title="Read aloud using Web Speech API"
+                            style={{ background: 'none', border: 'none', color: isSpeaking ? '#f43f5e' : '#94a3b8', cursor: 'pointer' }}
+                          >
+                            {isSpeaking ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                          </button>
                         </div>
 
-                        {/* Web Speech API TTS Audio Speaker Button */}
-                        <button
-                          onClick={() => speakText(msg.content)}
-                          title="Read aloud using Web Speech API"
-                          style={{
-                            background: 'none',
-                            border: 'none',
-                            color: isSpeaking ? '#f43f5e' : '#94a3b8',
-                            cursor: 'pointer',
-                            padding: '0.2rem'
-                          }}
-                        >
-                          {isSpeaking ? <VolumeX size={16} /> : <Volume2 size={16} />}
-                        </button>
+                        {/* Confidence Score Bar & Metrics */}
+                        {msg.confidence !== undefined && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.35rem', fontSize: '0.725rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                              <span style={{ color: '#94a3b8' }}>Confidence:</span>
+                              <span style={{
+                                fontWeight: 700,
+                                color: msg.confidence_level === 'High' ? '#34d399' : msg.confidence_level === 'Medium' ? '#fbbf24' : '#f43f5e'
+                              }}>
+                                {(msg.confidence * 100).toFixed(0)}% ({msg.confidence_level})
+                              </span>
+                            </div>
+
+                            {msg.total_latency_ms && (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#64748b' }}>
+                                <Clock size={12} />
+                                {msg.total_latency_ms} ms
+                              </div>
+                            )}
+
+                            {msg.filtered_out_count > 0 && (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', color: '#f59e0b' }}>
+                                <Filter size={12} />
+                                Filtered {msg.filtered_out_count} low-score chunks
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     )}
 
@@ -317,7 +360,7 @@ export default function QueryWorkspace({ API_BASE }) {
             {loading && (
               <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', color: '#94a3b8', fontSize: '0.85rem' }}>
                 <Bot size={20} className="animate-spin" color="#6366f1" />
-                <span>Multi-Agent Orchestrator executing query routing...</span>
+                <span>Multi-Agent Orchestrator executing sequential pipeline routing...</span>
               </div>
             )}
             <div ref={chatEndRef} />
@@ -327,7 +370,6 @@ export default function QueryWorkspace({ API_BASE }) {
           <form onSubmit={handleSendQuery} style={{ padding: '1rem 1.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)', backgroundColor: 'rgba(15, 23, 42, 0.6)' }}>
             <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
               
-              {/* Voice Speech-to-Text Button */}
               {speechSupported && (
                 <button
                   type="button"
@@ -354,7 +396,7 @@ export default function QueryWorkspace({ API_BASE }) {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder={isListening ? 'Listening to voice input...' : 'Ask a question across ingested knowledge bases...'}
+                placeholder={isListening ? 'Listening to voice input...' : 'Ask a factual, procedural, comparative, or general question...'}
                 style={{
                   flex: 1,
                   padding: '0.75rem 1rem',
@@ -391,11 +433,11 @@ export default function QueryWorkspace({ API_BASE }) {
           </form>
         </div>
 
-        {/* Right Side: Multi-Agent Execution Trace Visualizer */}
+        {/* Right Side: Multi-Agent Execution Trace Stream */}
         <div className="glass-panel" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
           <h3 style={{ fontSize: '0.95rem', fontWeight: 600, color: '#f8fafc', marginBottom: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
             <Sparkles size={16} color="#06b6d4" />
-            Live Multi-Agent Trace Log
+            Live Multi-Agent Execution Trace
           </h3>
 
           <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -410,9 +452,11 @@ export default function QueryWorkspace({ API_BASE }) {
                     <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#06b6d4' }}>
                       {step.agent_name}
                     </span>
-                    <span style={{ fontSize: '0.68rem', color: '#64748b', fontFamily: 'var(--font-mono)' }}>
-                      {step.timestamp}
-                    </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.68rem', color: '#64748b', fontFamily: 'var(--font-mono)' }}>
+                      <span>{step.latency_ms} ms</span>
+                      <span>•</span>
+                      <span>{step.timestamp}</span>
+                    </div>
                   </div>
 
                   <p style={{ fontSize: '0.78rem', color: '#e2e8f0', marginBottom: '0.4rem' }}>
@@ -431,7 +475,7 @@ export default function QueryWorkspace({ API_BASE }) {
             ) : (
               <div style={{ textAlign: 'center', margin: 'auto', color: '#64748b', padding: '1rem' }}>
                 <Bot size={32} style={{ opacity: 0.3, marginBottom: '0.5rem' }} />
-                <p style={{ fontSize: '0.8rem' }}>Agent execution steps will be streamed here during query resolution.</p>
+                <p style={{ fontSize: '0.8rem' }}>Agent execution steps & latency telemetry will stream here live during query resolution.</p>
               </div>
             )}
           </div>
