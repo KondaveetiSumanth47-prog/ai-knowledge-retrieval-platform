@@ -11,9 +11,9 @@ from ingestion.vector_store import VectorStoreManager
 
 class MultiAgentOrchestrator:
     """
-    4. Multi-Agent Orchestration Layer (Milestone 2):
-    Coordinates Query Understanding -> Retrieval -> Clarification -> Memory -> Response Generation sequentially per query.
-    Tracks latency telemetry and outputs structured trace streams.
+    M2.4 — Multi-Agent Orchestration Layer:
+    Sequentially coordinates: User Query -> Query Understanding -> Retrieval -> Response Generation -> Final Response.
+    Implements robust error handling for classification failures, retrieval failures, empty results, and generation failures.
     """
     def __init__(self, vector_store: VectorStoreManager = None):
         self.query_agent = QueryUnderstandingAgent()
@@ -35,26 +35,44 @@ class MultiAgentOrchestrator:
                 "timestamp": datetime.now().strftime("%H:%M:%S.%f")[:-3]
             })
 
-        # Step 1: Query Understanding Agent
+        # Step 1: Query Understanding Agent (with Error Handling)
         t0 = time.time()
-        qu_res = self.query_agent.process(query_text, domain_filter=domain_filter)
+        try:
+            qu_res = self.query_agent.process(query_text, domain_filter=domain_filter)
+        except Exception as e:
+            qu_res = {
+                "original_query": query_text,
+                "cleaned_query": query_text.strip(),
+                "intent": "Factual",
+                "query_type": "factual",
+                "classification_confidence": 0.50,
+                "resolution_path": "factual_direct",
+                "keywords": query_text.split(),
+                "is_ambiguous": False,
+                "target_domain": domain_filter,
+                "error": str(e)
+            }
         t1 = time.time()
         add_trace(
             agent_name="1. Query Understanding Agent",
-            action=f"Classified query as '{qu_res['intent']}' and assigned resolution path '{qu_res['resolution_path']}'.",
+            action=f"Classified query as '{qu_res['intent']}' and assigned path '{qu_res['resolution_path']}'.",
             details={
                 "intent": qu_res['intent'],
                 "resolution_path": qu_res['resolution_path'],
-                "keywords": qu_res['keywords'],
+                "classification_confidence": qu_res.get('classification_confidence', 0.95),
                 "is_ambiguous": qu_res['is_ambiguous']
             },
             latency_ms=(t1 - t0) * 1000
         )
 
-        # Step 2: Conversation Memory Agent
+        # Step 2: Conversation Memory Agent (with Error Handling)
         t0 = time.time()
-        history = self.memory_agent.get_session_history(session_id) if session_id else []
-        formatted_history = self.memory_agent.format_history_context(history)
+        try:
+            history = self.memory_agent.get_session_history(session_id) if session_id else []
+            formatted_history = self.memory_agent.format_history_context(history)
+        except Exception as e:
+            history = []
+            formatted_history = ""
         t1 = time.time()
         add_trace(
             agent_name="4. Conversation Memory Agent",
@@ -66,9 +84,19 @@ class MultiAgentOrchestrator:
             latency_ms=(t1 - t0) * 1000
         )
 
-        # Step 3: Retrieval Agent
+        # Step 3: Retrieval Agent (with Error Handling)
         t0 = time.time()
-        retrieval_res = self.retrieval_agent.process(qu_res, top_k=5)
+        try:
+            retrieval_res = self.retrieval_agent.process(qu_res, top_k=5)
+        except Exception as e:
+            retrieval_res = {
+                "retrieved_chunks": [],
+                "total_retrieved": 0,
+                "filtered_out_count": 0,
+                "top_score": 0.0,
+                "sufficient_context": False,
+                "error": str(e)
+            }
         t1 = time.time()
         add_trace(
             agent_name="2. Retrieval Agent",
@@ -82,9 +110,16 @@ class MultiAgentOrchestrator:
             latency_ms=(t1 - t0) * 1000
         )
 
-        # Step 4: Clarification Agent
+        # Step 4: Clarification Agent (with Error Handling)
         t0 = time.time()
-        clarification_res = self.clarification_agent.process(qu_res, retrieval_res)
+        try:
+            clarification_res = self.clarification_agent.process(qu_res, retrieval_res)
+        except Exception as e:
+            clarification_res = {
+                "needs_clarification": False,
+                "clarification_reason": "",
+                "clarification_options": []
+            }
         t1 = time.time()
         add_trace(
             agent_name="3. Clarification Agent",
@@ -96,16 +131,24 @@ class MultiAgentOrchestrator:
             latency_ms=(t1 - t0) * 1000
         )
 
-        # Step 5: Response Generation Agent
+        # Step 5: Response Generation Agent (with Error Handling)
         t0 = time.time()
-        resp_res = self.response_agent.process(
-            query=query_text,
-            retrieved_chunks=retrieval_res['retrieved_chunks'],
-            resolution_path=qu_res['resolution_path'],
-            conversation_history=formatted_history,
-            needs_clarification=clarification_res['needs_clarification'],
-            clarification_options=clarification_res['clarification_options']
-        )
+        try:
+            resp_res = self.response_agent.process(
+                query=query_text,
+                retrieved_chunks=retrieval_res['retrieved_chunks'],
+                resolution_path=qu_res['resolution_path'],
+                conversation_history=formatted_history,
+                needs_clarification=clarification_res['needs_clarification'],
+                clarification_options=clarification_res['clarification_options']
+            )
+        except Exception as e:
+            resp_res = {
+                "answer": f"An error occurred during response generation: {str(e)}",
+                "confidence_score": 0.0,
+                "confidence_level": "Low",
+                "citations": []
+            }
         t1 = time.time()
         add_trace(
             agent_name="5. Response Generation Agent",
@@ -124,7 +167,10 @@ class MultiAgentOrchestrator:
             "query": query_text,
             "answer": resp_res['answer'],
             "intent": qu_res['intent'],
+            "query_type": qu_res.get('query_type', 'factual'),
+            "classification_confidence": qu_res.get('classification_confidence', 0.95),
             "resolution_path": qu_res['resolution_path'],
+            "routing_information": qu_res.get('routing_information', {}),
             "confidence_score": resp_res['confidence_score'],
             "confidence_level": resp_res['confidence_level'],
             "citations": resp_res['citations'],
