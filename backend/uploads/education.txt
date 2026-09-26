@@ -1,0 +1,11 @@
+Education Knowledge Base
+
+Artificial Intelligence is a branch of computer science that focuses on creating systems that can perform tasks that normally require human intelligence.
+
+Machine Learning is a part of Artificial Intelligence. It allows computers to learn patterns from data and make predictions or decisions.
+
+Supervised Learning is a machine learning method where a model learns from labeled training data.
+
+Unsupervised Learning is a machine learning method where a model finds patterns in data without labeled answers.
+
+Deep Learning is a type of machine learning that uses neural networks with multiple layers to learn complex patterns.
